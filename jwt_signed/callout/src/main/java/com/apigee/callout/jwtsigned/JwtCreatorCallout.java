@@ -453,7 +453,16 @@ public class JwtCreatorCallout implements Execution {
                             claims.setAudience(java.util.Arrays.asList(audiences));
                         }
                         else {
-                            if (resolvedValue instanceof String[]) {
+                            if (resolvedValue instanceof String) {
+                                try {
+                                  net.minidev.json.JSONObject jsonVal = com.nimbusds.jose.util.JSONObjectUtils.parseJSONObject(resolvedValue.toString());
+                                  claims.setClaim(claimName, jsonVal);
+                                }
+                                catch {
+                                    // TODO: Handle error.
+                                }
+                            }
+                            else if (resolvedValue instanceof String[]) {
                                 claims.setClaim(claimName, java.util.Arrays.asList((String[])resolvedValue));
                             }
                             else if (resolvedValue instanceof org.mozilla.javascript.NativeArray) {
